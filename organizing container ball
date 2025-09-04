@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Function to compare two integers for qsort
+int compare(const void *a, const void *b) {
+    return (*(int *)a - *(int *)b);
+}
+
+// Function to check if sorting balls is possible for a given matrix
+char* organizingContainers(int n, int container[][100]) {
+    long long row_sums[100] = {0}; // Sum of balls in each container
+    long long col_sums[100] = {0}; // Sum of balls of each type
+    
+    // Calculate row sums and column sums
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            row_sums[i] += container[i][j];
+            col_sums[j] += container[i][j];
+        }
+    }
+    
+    // Sort both row sums and column sums
+    qsort(row_sums, n, sizeof(long long), compare);
+    qsort(col_sums, n, sizeof(long long), compare);
+    
+    // Check if sorted sums are equal
+    for (int i = 0; i < n; i++) {
+        if (row_sums[i] != col_sums[i]) {
+            return "Impossible";
+        }
+    }
+    return "Possible";
+}
+
+int main() {
+    int q;
+    scanf("%d", &q); // Read number of queries
+    
+    while (q--) {
+        int n;
+        scanf("%d", &n); // Read number of containers and ball types
+        
+        // Read the n x n matrix
+        int container[100][100];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                scanf("%d", &container[i][j]);
+            }
+        }
+        
+        // Print result for the current query
+        printf("%s\n", organizingContainers(n, container));
+    }
+    
+    return 0;
+}
