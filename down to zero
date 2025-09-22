@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int* dp;
+
+int min_moves(int n) {
+    if (n == 0) return 0;
+    if (dp[n] != -1) return dp[n];
+    int res = min_moves(n - 1) + 1;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) {
+            int a = i;
+            int b = n / i;
+            int candidate = min_moves(n - (a > b ? a : b)) + 1;
+            if (candidate < res) res = candidate;
+        }
+    }
+    dp[n] = res;
+    return res;
+}
+
+int main() {
+    int q;
+    scanf("%d", &q);
+    int max_n = 0;
+    int* queries = malloc(q * sizeof(int));
+    for (int i = 0; i < q; i++) {
+        scanf("%d", &queries[i]);
+        if (queries[i] > max_n) max_n = queries[i];
+    }
+    dp = malloc((max_n + 1) * sizeof(int));
+    for (int i = 0; i <= max_n; i++)
+        dp[i] = -1;
+
+    for (int i = 0; i < q; i++) {
+        printf("%d\n", min_moves(queries[i]));
+    }
+
+    free(dp);
+    free(queries);
+    return 0;
+}
