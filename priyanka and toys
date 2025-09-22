@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int compare(const void* a, const void* b) {
+    return (*(int*)a - *(int*)b);
+}
+
+int priya_and_toys(int* weights, int n) {
+    qsort(weights, n, sizeof(int), compare);
+    int count = 1;
+    int limit = weights[0] + 4;
+    for (int i = 1; i < n; i++) {
+        if (weights[i] > limit) {
+            count++;
+            limit = weights[i] + 4;
+        }
+    }
+    return count;
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    int weights[n];
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &weights[i]);
+    }
+    printf("%d\n", priya_and_toys(weights, n));
+    return 0;
+}
