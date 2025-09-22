@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int id;
+    int completion;
+} order;
+
+int cmp(const void* a, const void* b) {
+    order* o1 = (order*)a;
+    order* o2 = (order*)b;
+    if (o1->completion == o2->completion)
+        return o1->id - o2->id;
+    return o1->completion - o2->completion;
+}
+
+int* jimOrders(int orders_rows, int orders_columns, int** orders, int* result_count) {
+    *result_count = orders_rows;
+    order* arr = malloc(orders_rows * sizeof(order));
+    
+    for (int i = 0; i < orders_rows; i++) {
+        arr[i].id = i + 1;
+        arr[i].completion = orders[i][0] + orders[i][1];
+    }
+    
+    qsort(arr, orders_rows, sizeof(order), cmp);
+    
+    int* result = malloc(orders_rows * sizeof(int));
+    for (int i = 0; i < orders_rows; i++) {
+        result[i] = arr[i].id;
+    }
+    free(arr);
+    return result;
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    int** orders = malloc(n * sizeof(int*));
+    for (int i = 0; i < n; i++) {
+        orders[i] = malloc(2 * sizeof(int));
+        scanf("%d %d", &orders[i][0], &orders[i][1]);
+    }
+    
+    int result_count;
+    int* result = jimOrders(n, 2, orders, &result_count);
+    
+    for (int i = 0; i < result_count; i++) {
+        printf("%d", result[i]);
+        if (i < result_count - 1) printf(" ");
+    }
+    printf("\n");
+    
+    for (int i = 0; i < n; i++) free(orders[i]);
+    free(orders);
+    free(result);
+    return 0;
+}
