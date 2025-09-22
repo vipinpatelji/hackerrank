@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int* climbingLeaderboard(int* ranked, int rankedCount, int* player, int playerCount, int* resultCount) {
+    // First, create an array for the distinct ranks in descending order
+    int* distinctRanks = (int*)malloc(rankedCount * sizeof(int));
+    int distinctCount = 0;
+
+    distinctRanks[distinctCount++] = ranked[0];
+    for (int i = 1; i < rankedCount; i++) {
+        if (ranked[i] != ranked[i-1]) {
+            distinctRanks[distinctCount++] = ranked[i];
+        }
+    }
+
+    int* ranks = (int*)malloc(playerCount * sizeof(int));
+    int index = distinctCount - 1;  // start from the lowest rank
+
+    for (int i = 0; i < playerCount; i++) {
+        while (index >= 0 && player[i] >= distinctRanks[index]) {
+            index--;
+        }
+        ranks[i] = index + 2;  // rank is index+2 because index from 0-based and next rank
+    }
+
+    *resultCount = playerCount;
+    free(distinctRanks);
+    return ranks;
+}
+
+int main() {
+    int n, m;
+    scanf("%d", &n);
+    int ranked[n];
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &ranked[i]);
+    }
+    scanf("%d", &m);
+    int player[m];
+    for (int i = 0; i < m; i++) {
+        scanf("%d", &player[i]);
+    }
+
+    int resultCount;
+    int* ranks = climbingLeaderboard(ranked, n, player, m, &resultCount);
+
+    for (int i = 0; i < resultCount; i++) {
+        printf("%d\n", ranks[i]);
+    }
+    free(ranks);
+    return 0;
+}
