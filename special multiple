@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <string.h>
+
+char q[200000][110]; // Ample space for up to 10^4 test cases
+int front, rear;
+
+int main() {
+    int T, N;
+    scanf("%d", &T);
+    while (T--) {
+        scanf("%d", &N);
+        front = 0; rear = 1;
+        strcpy(q[0], "9");
+        int found = 0;
+        while (front < rear && !found) {
+            long long num = 0;
+            for (int i = 0; q[front][i]; i++)
+                num = num * 10 + (q[front][i] - '0');
+            if (num % N == 0) {
+                printf("%s\n", q[front]);
+                found = 1;
+                break;
+            }
+            strcpy(q[rear], q[front]);
+            strcat(q[rear++], "0");
+            strcpy(q[rear], q[front]);
+            strcat(q[rear++], "9");
+            front++;
+        }
+    }
+    return 0;
+}
